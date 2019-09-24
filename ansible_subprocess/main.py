@@ -1,5 +1,6 @@
 from subprocess import run
 
+
 def get_hosts_str(hosts):
     if isinstance(hosts, list):
         hosts = ",".join(hosts) + ","
@@ -21,7 +22,7 @@ def run_ping(host, ansible_command='ansible'):
     ]
     
     try:
-        process = run(command, capture=True, universal_newlines=True)
+        process = run(command, capture_output=True, check=True)
     except Exception as e:
         return False, e
     return True, process
@@ -49,10 +50,10 @@ def run_playbook(playbook_filename, hosts, playbook_command='ansible-playbook', 
         elif isinstance(extra_options, list):
             command += extra_options
         else:
-            raise TypeError("extra_options must be str or list.")
+            return False, TypeError("extra_options must be str or list.")
 
     try:
-        process = run(command, capture=True, universal_newlines=True)
+        process = run(command, capture_output=True, check=True)
     except Exception as e:
         return False, e
     return True, process
